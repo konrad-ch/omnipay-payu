@@ -7,6 +7,7 @@ use Omnipay\PayU\Messages\Notification;
 use Omnipay\PayU\Messages\PurchaseRequest;
 use Omnipay\PayU\Messages\AccessTokenRequest;
 use Omnipay\PayU\Messages\CompletePurchaseRequest;
+use Omnipay\Common\Exception\InvalidRequestException;
 
 /**
  * @method \Omnipay\Common\Message\ResponseInterface capture(array $options = array())
@@ -131,14 +132,22 @@ class Gateway extends AbstractGateway
 
     /**
      * @return \Omnipay\PayU\Messages\AccessTokenResponse
+     *
+     * @throws InvalidRequestException
      */
     public function getAccessToken()
     {
-        return $this->createRequest(AccessTokenRequest::class, [
+        $response = $this->createRequest(AccessTokenRequest::class, [
             'clientId'     => $this->getParameter('posId'),
             'clientSecret' => $this->getParameter('clientSecret'),
             'apiUrl'       => $this->getApiUrl()
         ])->send();
+
+        if (! $response->isSuccessful()) {
+			throw new InvalidRequestException( 'Could not retrieve Oauth access token.' );
+        }
+
+        return $response;
     }
 
     /**
