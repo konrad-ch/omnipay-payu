@@ -5,9 +5,18 @@ use Omnipay\Common\Message\AbstractRequest;
 
 class AccessTokenRequest extends AbstractRequest
 {
+    const OAUTH_CONTEXT = '/pl/standard/user/oauth/authorize';
 
     /** @var string */
     private $apiUrl;
+
+    /**
+     * @param string $apiUrl
+     */
+    public function setApiUrl($apiUrl)
+    {
+        $this->apiUrl = $apiUrl;
+    }
 
     /**
      * @param string $clientId
@@ -25,18 +34,20 @@ class AccessTokenRequest extends AbstractRequest
         $this->setParameter('clientSecret', $clientSecret);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function sendData($data)
     {
-        $authorizeUrl = $this->apiUrl . '/pl/standard/user/oauth/authorize';
+        $response = $this->httpClient->request('POST', $this->apiUrl . static::OAUTH_CONTEXT, [
+            'Accept'       => 'application/json',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ], http_build_query($data, '', '&'));
 
-        $headers = [
-            'Accept' => 'application/json',
-            'ContentType' => 'application/json',
-        ];
-        $tokenData = $this->httpClient->post($authorizeUrl, $headers, $data)->send();
-
-        $response = new AccessTokenResponse($this, $tokenData->json());
-        return $response;
+        return new AccessTokenResponse(
+            $this,
+            json_decode($response->getBody()->getContents(), true)
+        );
     }
 
     /**
@@ -45,17 +56,9 @@ class AccessTokenRequest extends AbstractRequest
     public function getData()
     {
         return [
-            'grant_type' => 'client_credentials',
-            'client_id' => $this->parameters->get('clientId'),
+            'grant_type'    => 'client_credentials',
+            'client_id'     => $this->parameters->get('clientId'),
             'client_secret' => $this->parameters->get('clientSecret'),
         ];
-    }
-
-    /**
-     * @param string $apiUrl
-     */
-    public function setApiUrl($apiUrl)
-    {
-        $this->apiUrl = $apiUrl;
     }
 }

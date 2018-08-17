@@ -8,55 +8,47 @@ use Omnipay\Common\Message\RedirectResponseInterface;
 class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
     /**
-     * @return boolean
+     * {@inheritdoc}
      */
     public function isSuccessful()
     {
         if ('SUCCESS' !== $this->data['status']['statusCode']) {
             return false;
         }
-        $redirectUrl = $this->getRedirectUrl();
 
-        return is_string($redirectUrl);
+        return is_string($this->getRedirectUrl());
     }
 
     /**
-     * Gets the redirect target url.
+     * {@inheritdoc}
+     */
+    public function isRedirect()
+    {
+        return isset($this->data['redirectUri']) && is_string($this->data['redirectUri']);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getRedirectUrl()
     {
-        if (isset($this->data['redirectUri']) && is_string($this->data['redirectUri'])) {
+        if ($this->isRedirect()) {
             return $this->data['redirectUri'];
-        } else {
-            return null;
         }
-    }
 
-    /**
-     * Get the required redirect method (either GET or POST).
-     */
-    public function getRedirectMethod()
-    {
-        return 'GET';
-    }
-
-    /**
-     * Gets the redirect form data array, if the redirect method is POST.
-     */
-    public function getRedirectData()
-    {
         return null;
     }
 
     /**
-     * @return string|null
+     * {@inheritdoc}
      */
     public function getTransactionId()
     {
-        if (isset($this->data['extOrderId']) && !empty($this->data['extOrderId'])) {
+        if (isset($this->data['extOrderId']) && ! empty($this->data['extOrderId'])) {
             return (string) $this->data['extOrderId'];
         }
-        if (isset($this->request->getParameters()['transactionId']) && !empty($this->request->getParameters()['transactionId'])) {
+
+        if (isset($this->request->getParameters()['transactionId']) && ! empty($this->request->getParameters()['transactionId'])) {
             return $this->request->getParameters()['transactionId'];
         }
 
@@ -64,19 +56,14 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     }
 
     /**
-     * PayU orderId
-     * @return string
+     * {@inheritdoc}
      */
     public function getTransactionReference()
     {
-        if (isset($this->data['orderId']) && !empty($this->data['orderId'])) {
-            return (string) $this->data['orderId'];
+        if (isset($this->data['orderId']) && ! empty($this->data['orderId'])) {
+            return (string)$this->data['orderId'];
         }
-        return null;
-    }
 
-    public function isRedirect()
-    {
-        return is_string($this->data['redirectUri']);
+        return null;
     }
 }

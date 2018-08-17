@@ -1,21 +1,21 @@
 <?php
+
 namespace Omnipay\PayU\Messages;
 
 use Omnipay\Common\Message\AbstractResponse;
 
 class AccessTokenResponse extends AbstractResponse
 {
-
     /**
-     * @return boolean
+     * {@inheritdoc}
      */
     public function isSuccessful()
     {
         return is_array($this->data)
-            && isset($this->data['access_token'])
-            && is_string($this->data['access_token'])
-            && isset($this->data['token_type'])
-            && is_string($this->data['token_type']);
+               && isset($this->data['access_token'])
+               && is_string($this->data['access_token'])
+               && isset($this->data['token_type'])
+               && is_string($this->data['token_type']);
     }
 
     /**
@@ -27,5 +27,4 @@ class AccessTokenResponse extends AbstractResponse
 
         return $completeToken;
     }
-
 }

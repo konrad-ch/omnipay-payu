@@ -3,21 +3,28 @@
 namespace Omnipay\PayU;
 
 use Omnipay\Common\AbstractGateway;
-use Omnipay\PayU\Messages\AccessTokenRequest;
-use Omnipay\PayU\Messages\AccessTokenResponse;
-use Omnipay\PayU\Messages\CompletePurchaseRequest;
-use Omnipay\PayU\Messages\CompletePurchaseResponse;
 use Omnipay\PayU\Messages\Notification;
 use Omnipay\PayU\Messages\PurchaseRequest;
-use Omnipay\PayU\Messages\PurchaseResponse;
+use Omnipay\PayU\Messages\AccessTokenRequest;
+use Omnipay\PayU\Messages\CompletePurchaseRequest;
 
+/**
+ * @method \Omnipay\Common\Message\ResponseInterface capture(array $options = array())
+ * @method \Omnipay\Common\Message\ResponseInterface refund(array $options = array())
+ * @method \Omnipay\Common\Message\ResponseInterface authorize(array $options = array())
+ * @method \Omnipay\Common\Message\ResponseInterface completeAuthorize(array $options = array())
+ * @method \Omnipay\Common\Message\ResponseInterface void(array $options = array())
+ * @method \Omnipay\Common\Message\ResponseInterface createCard(array $options = array())
+ * @method \Omnipay\Common\Message\ResponseInterface updateCard(array $options = array())
+ * @method \Omnipay\Common\Message\ResponseInterface deleteCard(array $options = array())
+ */
 class Gateway extends AbstractGateway
 {
     const URL_SANDBOX = 'https://secure.snd.payu.com';
     const URL_PRODUCTION = 'https://secure.payu.com';
 
     /**
-     * Get gateway display name
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -25,63 +32,8 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @return AccessTokenResponse
+     * {@inheritdoc}
      */
-    public function getAccessToken()
-    {
-        $request = parent::createRequest(AccessTokenRequest::class, [
-            'clientId'     => $this->getParameter('posId'),
-            'clientSecret' => $this->getParameter('clientSecret'),
-            'apiUrl'       => $this->getApiUrl()
-        ]);
-        $response = $request->send();
-
-        return $response;
-    }
-
-    /**
-     * @param array $parameters
-     * @return PurchaseResponse
-     */
-    public function purchase(array $parameters = [])
-    {
-        $this->setAccessToken($this->getAccessToken()->getAccessToken());
-        $request = parent::createRequest(PurchaseRequest::class, $parameters);
-        $response = $request->send();
-
-        return $response;
-    }
-
-    /**
-     * @param array $parameters
-     * @return CompletePurchaseResponse
-     */
-    public function completePurchase(array $parameters = [])
-    {
-        $this->setAccessToken($this->getAccessToken()->getAccessToken());
-        $request = self::createRequest(CompletePurchaseRequest::class, $parameters);
-        $response = $request->send();
-
-        return $response;
-    }
-
-    public function acceptNotification()
-    {
-        return new Notification($this->httpRequest, $this->httpClient, $this->getParameter('secondKey'));
-    }
-
-    /**
-     * @return string
-     */
-    private function getApiUrl()
-    {
-        if ($this->getTestMode()) {
-            return self::URL_SANDBOX;
-        } else {
-            return self::URL_PRODUCTION;
-        }
-    }
-
     public function getDefaultParameters()
     {
         return [
@@ -94,52 +46,179 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param string $secondKey
+     * Gets the second key.
+     *
+     * @return string
+     */
+    public function getSecondKey()
+    {
+        return $this->getParameter('secondKey');
+    }
+
+    /**
+     * Sets the second key.
+     *
+     * @param  string $secondKey
+     * @return $this
      */
     public function setSecondKey($secondKey)
     {
-        $this->setParameter('secondKey', $secondKey);
+        return $this->setParameter('secondKey', $secondKey);
     }
 
     /**
-     * @param string $posId
+     * Gets the POS ID.
+     *
+     * @return $this
+     */
+    public function getPosId()
+    {
+        return $this->getParameter('posId');
+    }
+
+    /**
+     * Sets the POS ID.
+     *
+     * @param  string $posId
+     * @return $this
      */
     public function setPosId($posId)
     {
-        $this->setParameter('posId', $posId);
+        return $this->setParameter('posId', $posId);
     }
 
     /**
-     * @param string $clientSecret
+     * Gets the client secret.
+     *
+     * @return $this
+     */
+    public function getClientSecret()
+    {
+        return $this->getParameter('clientSecret');
+    }
+
+    /**
+     * Sets the client secret.
+     *
+     * @param  string $clientSecret
+     * @return $this
      */
     public function setClientSecret($clientSecret)
     {
-        $this->setParameter('clientSecret', $clientSecret);
+        return $this->setParameter('clientSecret', $clientSecret);
     }
 
     /**
-     * @param string|null $posAuthKey
+     * Gets the POS auth key.
+     *
+     * @return $this
+     */
+    public function getPosAuthKey()
+    {
+        return $this->getParameter('posAuthKey');
+    }
+
+    /**
+     * Sets the POS auth key.
+     *
+     * @param  string|null $posAuthKey
+     * @return $this
      */
     public function setPosAuthKey($posAuthKey = null)
     {
-        $this->setParameter('posAuthKey', $posAuthKey);
+        return $this->setParameter('posAuthKey', $posAuthKey);
     }
 
+    /**
+     * @return \Omnipay\PayU\Messages\AccessTokenResponse
+     */
+    public function getAccessToken()
+    {
+        return $this->createRequest(AccessTokenRequest::class, [
+            'clientId'     => $this->getParameter('posId'),
+            'clientSecret' => $this->getParameter('clientSecret'),
+            'apiUrl'       => $this->getApiUrl()
+        ])->send();
+    }
+
+    /**
+     * Sets the access token.
+     *
+     * @param  string $accessToken
+     * @return $this
+     */
+    protected function setAccessToken($accessToken)
+    {
+        return $this->setParameter('accessToken', $accessToken);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getApiUrl()
+    {
+        if ($this->getTestMode()) {
+            return self::URL_SANDBOX;
+        }
+
+        return self::URL_PRODUCTION;
+    }
+
+    /**
+     * Sets the API URL.
+     *
+     * @param  string $apiUrl
+     * @return $this
+     */
+    protected function setApiUrl($apiUrl)
+    {
+        return $this->setParameter('apiUrl', $apiUrl);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function initialize(array $parameters = [])
     {
         parent::initialize($parameters);
+
         $this->setApiUrl($this->getApiUrl());
 
         return $this;
     }
 
-    private function setApiUrl($apiUrl)
+    /**
+     * Create the purchase request.
+     *
+     * @param array $parameters
+     *
+     * @return \Omnipay\PayU\Messages\PurchaseRequest
+     */
+    public function purchase(array $parameters = [])
     {
-        $this->setParameter('apiUrl', $apiUrl);
+        $this->setAccessToken($this->getAccessToken()->getAccessToken());
+
+        return $this->createRequest(PurchaseRequest::class, $parameters);
     }
 
-    private function setAccessToken($accessToken)
+    /**
+     * @param  array $parameters
+     * @return \Omnipay\PayU\Messages\CompletePurchaseRequest
+     */
+    public function completePurchase(array $parameters = [])
     {
-        $this->setParameter('accessToken', $accessToken);
+        $this->setAccessToken($this->getAccessToken()->getAccessToken());
+
+        return $this->createRequest(CompletePurchaseRequest::class, $parameters);
+    }
+
+    /**
+     * Create the notification.
+     *
+     * @return Notification
+     */
+    public function acceptNotification()
+    {
+        return new Notification($this->httpRequest, $this->httpClient, $this->getSecondKey());
     }
 }

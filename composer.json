@@ -1,7 +1,7 @@
 {
-    "name": "bileto/omnipay-payu",
+    "name": "awethemes/omnipay-payu",
     "type": "library",
-    "description": "PayU gateway for Omnipay payment processing library",
+    "description": "[Forked from bileto/omnipay-payu] PayU gateway for Omnipay payment processing library",
     "keywords": [
         "gateway",
         "merchant",
@@ -11,27 +11,26 @@
         "payu",
         "purchase"
     ],
-    "homepage": "https://github.com/bileto/omnipay-payu",
+    "homepage": "https://github.com/awethemes/omnipay-payu",
     "license": "MIT",
     "authors": [
         {
             "name": "Jan Machala",
             "email": "jan.machala@bileto.com"
+        },
+        {
+            "name": "Nguyen Van Anh",
+            "email": "anhskohbo@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
     "autoload": {
         "psr-4": { "Omnipay\\PayU\\" : "src/" }
     },
     "require": {
-        "omnipay/common": "^2.5",
-        "openpayu/openpayu_php_sdk": "^2.2"
+        "omnipay/common": "^3.0"
     },
     "require-dev": {
-        "omnipay/tests": "^2.1",
-        "symfony/var-dumper": "^2.7",
-        "mockery/mockery": "^0.9.5",
-        "vlucas/phpdotenv": "^2.3",
-        "phpunit/phpunit": "3.7.*"
-    }
+        "omnipay/tests": "^3.0"
+    },
+    "minimum-stability": "stable"
 }

@@ -1,24 +1,11 @@
 <?php
-namespace Omnipay\PayU\Messages;
 
-use Omnipay\Common\Message\AbstractRequest;
-use Omnipay\Common\Message\ResponseInterface;
+namespace Omnipay\PayU\Messages;
 
 class CompletePurchaseRequest extends AbstractRequest
 {
-
-    public function setAccessToken($accessToken)
-    {
-        $this->setParameter('accessToken', $accessToken);
-    }
-
-    public function setApiUrl($apiUrl)
-    {
-        $this->setParameter('apiUrl', $apiUrl);
-    }
-
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getData()
     {
@@ -26,21 +13,20 @@ class CompletePurchaseRequest extends AbstractRequest
     }
 
     /**
-     * @param  mixed $data The data to send
-     * @return ResponseInterface
+     * {@inheritdoc}
      */
     public function sendData($data)
     {
-        $headers = [
-            'Accept'        => 'application/json',
-            'Content-Type'  => 'application/json',
-            'Authorization' => $data['accessToken']
-        ];
-        $url = $data['apiUrl'] . '/api/v2_1/orders/' . urlencode($this->getTransactionReference());
-        $httpRequest = $this->httpClient->get($url, $headers);
-        $httpResponse = $httpRequest->send();
+        $url = $this->getApiUrl() . '/api/v2_1/orders/' . urlencode($this->getTransactionReference());
 
-        $response = new CompletePurchaseResponse($this, $httpResponse->json());
+        $response = $this->httpClient->request('GET', $url, [
+            'Content-Type'  => 'application/json',
+            'Authorization' => $this->getAccessToken(),
+        ]);
+
+        $response = new CompletePurchaseResponse($this,
+            json_decode($response->getBody()->getContents(), true)
+        );
 
         return $this->response = $response;
     }

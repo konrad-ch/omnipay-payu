@@ -7,7 +7,7 @@ use Omnipay\Common\Message\AbstractResponse;
 class CompletePurchaseResponse extends AbstractResponse
 {
     /**
-     * @return boolean
+     * {@inheritdoc}
      */
     public function isSuccessful()
     {
@@ -15,29 +15,31 @@ class CompletePurchaseResponse extends AbstractResponse
     }
 
     /**
-     * @return string|null
+     * {@inheritdoc}
      */
-    public function getTransactionId()
-    {
-        if (isset($this->data['orders'][0]['extOrderId']) && !empty($this->data['orders'][0]['extOrderId'])) {
-            return (string) $this->data['orders'][0]['extOrderId'];
-        }
-
-        return null;
-    }
-
     public function isCancelled()
     {
         return in_array($this->getCode(), ['CANCELED', 'REJECTED'], true);
     }
 
     /**
-     * PAYMENT_ID is not present for transaction in state PENDING
-     * @return null|string
+     * {@inheritdoc}
+     */
+    public function getTransactionId()
+    {
+        if (isset($this->data['orders'][0]['extOrderId']) && ! empty($this->data['orders'][0]['extOrderId'])) {
+            return (string) $this->data['orders'][0]['extOrderId'];
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getTransactionReference()
     {
-        if (isset($this->data['orders'][0]['orderId']) && !empty($this->data['orders'][0]['orderId'])) {
+        if (isset($this->data['orders'][0]['orderId']) && ! empty($this->data['orders'][0]['orderId'])) {
             return (string) $this->data['orders'][0]['orderId'];
         }
 
@@ -45,34 +47,36 @@ class CompletePurchaseResponse extends AbstractResponse
     }
 
     /**
-     * Status code (string)
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getCode()
     {
         return $this->data['orders'][0]['status'];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isPending()
     {
         return in_array($this->getCode(), ['PENDING', 'WAITING_FOR_CONFIRMATION', 'NEW']);
     }
 
     /**
-     * @return string|null
+     * {@inheritdoc}
      */
     public function getPaymentReference()
     {
         if (isset($this->data['properties'])) {
-            $properties = $this->data['properties'];
+            $properties        = $this->data['properties'];
             $paymentIdProperty = array_filter($properties, function ($item) {
                 return $item['name'] === 'PAYMENT_ID';
             });
+
             if (isset($paymentIdProperty[0]['value'])) {
-                return (string)$paymentIdProperty[0]['value'];
+                return (string) $paymentIdProperty[0]['value'];
             }
-        };
+        }
 
         return null;
     }
