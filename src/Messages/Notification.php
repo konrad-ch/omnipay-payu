@@ -9,6 +9,7 @@ use Omnipay\Common\Exception\InvalidRequestException;
 class Notification implements NotificationInterface
 {
     /* Constants */
+    const STATUS_ON_HOLD = 'on-hold';
     const OPEN_PAY_U_SIGNATURE = 'OpenPayU-Signature';
     const X_OPEN_PAY_U_SIGNATURE = 'X-OpenPayU-Signature';
 
@@ -110,6 +111,10 @@ class Notification implements NotificationInterface
 
             if ('PENDING' === $status) {
                 return NotificationInterface::STATUS_PENDING;
+            }
+
+            if ('WAITING_FOR_CONFIRMATION' === $status) {
+                return static::STATUS_ON_HOLD;
             }
 
             if (in_array($status, ['CANCELLED', 'REJECTED'])) {
