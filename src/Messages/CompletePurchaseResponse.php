@@ -14,6 +14,14 @@ class CompletePurchaseResponse extends AbstractResponse
         return 'COMPLETED' === $this->getCode();
     }
 
+	/**
+	 * {@inheritdoc}
+	 */
+	public function isPending()
+	{
+		return in_array($this->getCode(), ['PENDING', 'WAITING_FOR_CONFIRMATION', 'NEW']);
+	}
+
     /**
      * {@inheritdoc}
      */
@@ -49,22 +57,6 @@ class CompletePurchaseResponse extends AbstractResponse
     /**
      * {@inheritdoc}
      */
-    public function getCode()
-    {
-        return $this->data['orders'][0]['status'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isPending()
-    {
-        return in_array($this->getCode(), ['PENDING', 'WAITING_FOR_CONFIRMATION', 'NEW']);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getPaymentReference()
     {
         if (isset($this->data['properties'])) {
@@ -80,4 +72,12 @@ class CompletePurchaseResponse extends AbstractResponse
 
         return null;
     }
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getCode()
+	{
+		return isset( $this->data['orders'][0]['status'] ) ? $this->data['orders'][0]['status'] : null;
+	}
 }
