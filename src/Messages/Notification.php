@@ -117,7 +117,7 @@ class Notification implements NotificationInterface
                 return static::STATUS_ON_HOLD;
             }
 
-            if (in_array($status, ['CANCELLED', 'REJECTED'])) {
+            if (in_array($status, ['CANCELED', 'CANCELLED', 'REJECTED'])) {
                 return NotificationInterface::STATUS_FAILED;
             }
 
