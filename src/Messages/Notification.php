@@ -90,8 +90,8 @@ class Notification implements NotificationInterface
      */
     public function getTransactionReference()
     {
-        if (isset($this->getData()->order->extOrderId) && ! empty($this->getData()->order->extOrderId)) {
-            return (string) $this->getData()->order->extOrderId;
+        if (isset($this->getData()->order->orderId)) {
+            return (string) $this->getData()->order->orderId;
         }
 
         return null;
