@@ -20,6 +20,7 @@ class GatewayFactory
     {
         /** @var \Omnipay\PayU\Gateway $gateway */
         $gateway = Omnipay::create('PayU', null, $httpRequest);
+
         $gateway->initialize([
             'posId' => $posId,
             'secondKey' => $secondKey,
@@ -27,6 +28,7 @@ class GatewayFactory
             'testMode' => $isSandbox,
             'posAuthKey' => $posAuthKey,
         ]);
+
         return $gateway;
     }
 }

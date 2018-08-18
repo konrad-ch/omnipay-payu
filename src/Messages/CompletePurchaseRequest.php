@@ -24,7 +24,8 @@ class CompletePurchaseRequest extends AbstractRequest
             'Authorization' => $this->getAccessToken(),
         ]);
 
-        $response = new CompletePurchaseResponse($this,
+        $response = new CompletePurchaseResponse(
+            $this,
             json_decode($response->getBody()->getContents(), true)
         );
 

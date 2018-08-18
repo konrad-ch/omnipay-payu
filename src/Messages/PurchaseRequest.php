@@ -106,7 +106,8 @@ class PurchaseRequest extends AbstractRequest
             'Authorization' => $this->getAccessToken(),
         ], json_encode($data));
 
-        $response = new PurchaseResponse($this,
+        $response = new PurchaseResponse(
+            $this,
             json_decode($response->getBody()->getContents(), true)
         );
 
@@ -121,7 +122,7 @@ class PurchaseRequest extends AbstractRequest
         $this->validate('amount', 'currency', 'items');
 
         $data                  = [];
-        $data['totalAmount']   = $this->toAmount( $this->getAmount() );
+        $data['totalAmount']   = $this->toAmount($this->getAmount());
         $data['currencyCode']  = strtoupper($this->getCurrency());
         $data['merchantPosId'] = $this->getPosId();
         $data['continueUrl']   = $this->getReturnUrl();
@@ -145,7 +146,7 @@ class PurchaseRequest extends AbstractRequest
             $data['settings'] = $this->getSettings();
         }
 
-        if ( $items = $this->getItems() ) {
+        if ($items = $this->getItems()) {
             $data['products'] = [];
 
             foreach ($items as $i => $item) {

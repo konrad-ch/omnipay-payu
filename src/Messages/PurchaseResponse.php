@@ -65,27 +65,27 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         return null;
     }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getMessage()
-	{
-		if (!$this->isSuccessful() && isset($this->data['status']['statusDesc']) && isset($this->data['status']['statusDesc'])) {
-			return $this->data['status']['statusDesc'];
-		}
+    /**
+     * {@inheritdoc}
+     */
+    public function getMessage()
+    {
+        if (!$this->isSuccessful() && isset($this->data['status']['statusDesc']) && isset($this->data['status']['statusDesc'])) {
+            return $this->data['status']['statusDesc'];
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getCode()
-	{
-		if (!$this->isSuccessful() && isset($this->data['status']['code']) && isset($this->data['status']['code'])) {
-			return $this->data['status']['code'];
-		}
+    /**
+     * {@inheritdoc}
+     */
+    public function getCode()
+    {
+        if (!$this->isSuccessful() && isset($this->data['status']['code']) && isset($this->data['status']['code'])) {
+            return $this->data['status']['code'];
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

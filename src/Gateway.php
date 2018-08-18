@@ -144,7 +144,7 @@ class Gateway extends AbstractGateway
         ])->send();
 
         if (! $response->isSuccessful()) {
-            throw new InvalidRequestException( 'Could not retrieve Oauth access token.' );
+            throw new InvalidRequestException('Could not retrieve Oauth access token.');
         }
 
         return $response;

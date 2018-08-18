@@ -26,8 +26,6 @@ class Notification implements NotificationInterface
      */
     protected $httpRequest;
 
-    /** @var string */
-
     /**
      * The second key.
      *
@@ -69,7 +67,7 @@ class Notification implements NotificationInterface
      */
     public function getData()
     {
-        if ( ! $this->cachedData) {
+        if (! $this->cachedData) {
             $content = trim($this->httpRequest->getContent());
 
             $incomingSignature = $this->getSignature($this->httpRequest);
@@ -79,7 +77,7 @@ class Notification implements NotificationInterface
             if ($sign && Signature::verify($content, $sign->signature, $this->secondKey, $sign->algorithm)) {
                 $this->cachedData = json_decode($content);
             } else {
-	            throw new InvalidRequestException('Invalid signature - ' . ($sign ? $sign->signature : 'unknown'));
+                throw new InvalidRequestException('Invalid signature - ' . ($sign ? $sign->signature : 'unknown'));
             }
         }
 
