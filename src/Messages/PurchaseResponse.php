@@ -12,11 +12,9 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function isSuccessful()
     {
-        if ('SUCCESS' !== $this->data['status']['statusCode']) {
-            return false;
-        }
+        $isSuccess = isset($this->data['status']['statusCode']) && 'SUCCESS' !== $this->data['status']['statusCode'];
 
-        return is_string($this->getRedirectUrl());
+        return ! $this->isRedirect() && $isSuccess;
     }
 
     /**
@@ -66,4 +64,28 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
 
         return null;
     }
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getMessage()
+	{
+		if (!$this->isSuccessful() && isset($this->data['status']['statusDesc']) && isset($this->data['status']['statusDesc'])) {
+			return $this->data['status']['statusDesc'];
+		}
+
+		return null;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getCode()
+	{
+		if (!$this->isSuccessful() && isset($this->data['status']['code']) && isset($this->data['status']['code'])) {
+			return $this->data['status']['code'];
+		}
+
+		return null;
+	}
 }
