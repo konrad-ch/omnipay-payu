@@ -78,9 +78,9 @@ class Notification implements NotificationInterface
 
             if ($sign && Signature::verify($content, $sign->signature, $this->secondKey, $sign->algorithm)) {
                 $this->cachedData = json_decode($content);
+            } else {
+	            throw new InvalidRequestException('Invalid signature - ' . ($sign ? $sign->signature : 'unknown'));
             }
-
-            throw new InvalidRequestException('Invalid signature - ' . ($sign ? $sign->signature : 'unknown'));
         }
 
         return $this->cachedData;
