@@ -12,7 +12,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function isSuccessful()
     {
-        $isSuccess = isset($this->data['status']['statusCode']) && 'SUCCESS' !== $this->data['status']['statusCode'];
+        $isSuccess = isset($this->data['status']['statusCode']) && 'SUCCESS' === $this->data['status']['statusCode'];
 
         return ! $this->isRedirect() && $isSuccess;
     }
