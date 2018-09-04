@@ -1,7 +1,7 @@
 {
     "name": "awethemes/omnipay-payu",
     "type": "library",
-    "description": "[Forked from bileto/omnipay-payu] PayU gateway for Omnipay payment processing library",
+    "description": "PayU gateway for Omnipay payment processing library",
     "keywords": [
         "gateway",
         "merchant",
