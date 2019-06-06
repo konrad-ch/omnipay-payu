@@ -131,7 +131,7 @@ class PurchaseRequest extends AbstractRequest
         $data['customerIp']    = $this->getClientIp() ?: $this->httpRequest->getClientIp();
 
         if ($this->getOrderNumber()) {
-            $data['exOrderId'] = $this->getOrderNumber();
+            $data['extOrderId'] = $this->getOrderNumber();
         }
 
         if ($this->getBuyer()) {
