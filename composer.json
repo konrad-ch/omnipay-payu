@@ -1,5 +1,5 @@
 {
-    "name": "awethemes/omnipay-payu",
+    "name": "konrad-ch/omnipay-payu",
     "type": "library",
     "description": "PayU gateway for Omnipay payment processing library",
     "keywords": [
